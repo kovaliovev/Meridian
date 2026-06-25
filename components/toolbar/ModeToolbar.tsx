@@ -24,12 +24,13 @@ export default function ModeToolbar() {
           <Link
             key={mode.href}
             href={href}
-            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors
-              ${active
-                ? 'bg-indigo-600 text-white'
-                : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
+            className={`relative px-2.5 py-1 text-xs font-medium tracking-wide transition-colors
+              ${active ? 'text-m-violet-bright' : 'text-m-dim hover:text-m-ink'}`}
           >
             {mode.label}
+            {active && (
+              <span className="absolute bottom-0 left-2.5 right-2.5 h-px bg-m-violet" />
+            )}
           </Link>
         )
       })}

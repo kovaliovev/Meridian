@@ -42,16 +42,18 @@ export default function DashboardClient({ children }: { children: React.ReactNod
   }, [router, searchParams, pathname])
 
   return (
-    <div className="flex flex-col h-screen bg-gray-950 text-gray-100">
-      <header className="flex items-center justify-between px-6 py-3 border-b border-gray-800 bg-gray-900 shrink-0">
-        <span className="font-bold text-lg tracking-tight text-white">Meridian</span>
-        <Suspense fallback={<div className="w-64" />}>
+    <div className="flex flex-col h-screen bg-m-bg text-m-ink">
+      <header className="flex items-center justify-between px-5 h-11 border-b border-m-line bg-m-surface shrink-0">
+        <span className="font-mono text-sm font-bold tracking-[0.2em] text-m-violet-bright uppercase select-none">
+          Meridian
+        </span>
+        <Suspense fallback={<div className="w-64 h-6" />}>
           <ModeToolbar />
         </Suspense>
-        <div className="w-32" />
+        <div className="w-24" />
       </header>
       <div className="flex flex-1 overflow-hidden">
-        <aside className="w-56 shrink-0 border-r border-gray-800 bg-gray-900 overflow-y-auto">
+        <aside className="w-52 shrink-0 border-r border-m-line bg-m-surface overflow-y-auto">
           <Sidebar
             lifeAreas={lifeAreas}
             selectedAreaId={selectedAreaId}

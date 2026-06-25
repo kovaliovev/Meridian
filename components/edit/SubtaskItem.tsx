@@ -27,14 +27,17 @@ export default function SubtaskItem({ subtask, onChanged }: { subtask: Subtask; 
     if (!error) onChanged()
   }
 
+  const isDone = subtask.status === 'done'
+
   return (
-    <div className="group flex items-center gap-2 py-1 pl-8 pr-2">
+    <div className="group flex items-center gap-2 py-1 pl-12 pr-2">
       <button
         onClick={toggleStatus}
-        className={`w-3.5 h-3.5 rounded border shrink-0 flex items-center justify-center transition-colors
-          ${subtask.status === 'done' ? 'bg-emerald-500 border-emerald-500' : 'border-gray-600 hover:border-emerald-500'}`}
+        className={`w-3 h-3 rounded-sm border shrink-0 flex items-center justify-center transition-all ${
+          isDone ? 'border-m-green bg-m-green/20' : 'border-m-spoke hover:border-m-green'
+        }`}
       >
-        {subtask.status === 'done' && <span className="text-white text-[9px]">✓</span>}
+        {isDone && <span className="text-m-green text-[7px] font-bold leading-none">✓</span>}
       </button>
       {editing ? (
         <input
@@ -43,17 +46,22 @@ export default function SubtaskItem({ subtask, onChanged }: { subtask: Subtask; 
           onChange={e => setName(e.target.value)}
           onBlur={saveName}
           onKeyDown={e => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') { setName(subtask.name); setEditing(false) } }}
-          className="flex-1 bg-transparent text-sm text-white outline-none border-b border-indigo-500"
+          className="flex-1 bg-transparent text-xs text-m-ink outline-none border-b border-m-violet pb-px"
         />
       ) : (
         <span
           onDoubleClick={() => setEditing(true)}
-          className={`flex-1 text-sm cursor-default ${subtask.status === 'done' ? 'line-through text-gray-600' : 'text-gray-300'}`}
+          className={`flex-1 text-xs cursor-default transition-colors ${isDone ? 'line-through text-m-ghost' : 'text-m-dim'}`}
         >
           {subtask.name}
         </span>
       )}
-      <button onClick={deleteSubtask} className="hidden group-hover:block text-gray-600 hover:text-red-400 text-xs">×</button>
+      <button
+        onClick={deleteSubtask}
+        className="opacity-0 group-hover:opacity-100 text-[10px] text-m-ghost hover:text-m-red transition-all"
+      >
+        ×
+      </button>
     </div>
   )
 }

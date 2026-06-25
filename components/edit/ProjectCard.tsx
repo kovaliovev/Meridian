@@ -39,14 +39,17 @@ export default function ProjectCard({ project, onChanged }: { project: ProjectWi
   }
 
   const doneCount = project.tasks.filter(t => t.status === 'done').length
+  const totalCount = project.tasks.length
 
   return (
-    <div className="mb-3 rounded-xl border border-gray-800 bg-gray-900/50">
+    <div className="mb-2 ml-3 pl-4 border-l border-m-line hover:border-m-spoke transition-colors">
       <div
-        className="group flex items-center gap-2 px-4 py-2.5 cursor-pointer"
+        className="group flex items-center gap-2 py-2 cursor-pointer"
         onClick={() => setExpanded(!expanded)}
       >
-        <span className="text-gray-500 text-xs">{expanded ? '▾' : '▸'}</span>
+        <span className="text-m-ghost text-xs select-none w-3">
+          {expanded ? '∨' : '›'}
+        </span>
         {editing ? (
           <input
             autoFocus
@@ -55,37 +58,45 @@ export default function ProjectCard({ project, onChanged }: { project: ProjectWi
             onBlur={saveName}
             onKeyDown={e => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') { setName(project.name); setEditing(false) } }}
             onClick={e => e.stopPropagation()}
-            className="flex-1 bg-transparent text-sm font-semibold text-white outline-none border-b border-indigo-500"
+            className="flex-1 bg-transparent text-sm font-medium text-m-ink outline-none border-b border-m-violet pb-px"
           />
         ) : (
           <span
             onDoubleClick={e => { e.stopPropagation(); setEditing(true) }}
-            className="flex-1 text-sm font-semibold text-white"
+            className="flex-1 text-sm font-medium text-m-ink"
           >
             {project.name}
           </span>
         )}
-        <span className="text-xs text-gray-600">{doneCount}/{project.tasks.length}</span>
-        <button
-          onClick={e => { e.stopPropagation(); setAddingTask(true); setExpanded(true) }}
-          className="hidden group-hover:block text-gray-500 hover:text-gray-300 text-xs px-1"
-        >+ task</button>
-        <button
-          onClick={e => { e.stopPropagation(); deleteProject() }}
-          className="hidden group-hover:block text-gray-600 hover:text-red-400 text-xs px-1"
-        >×</button>
+        {totalCount > 0 && (
+          <span className="text-[10px] text-m-ghost font-mono">{doneCount}/{totalCount}</span>
+        )}
+        <div className="opacity-0 group-hover:opacity-100 flex items-center gap-2 transition-opacity">
+          <button
+            onClick={e => { e.stopPropagation(); setAddingTask(true); setExpanded(true) }}
+            className="text-[11px] text-m-dim hover:text-m-ink transition-colors"
+          >
+            + task
+          </button>
+          <button
+            onClick={e => { e.stopPropagation(); deleteProject() }}
+            className="text-[11px] text-m-dim hover:text-m-red transition-colors"
+          >
+            ×
+          </button>
+        </div>
       </div>
 
       {expanded && (
         <div className="pb-2">
           {project.tasks.length === 0 && !addingTask && (
-            <p className="px-4 py-2 text-xs text-gray-600">No tasks yet — click &quot;+ task&quot; to add one</p>
+            <p className="py-1 text-xs text-m-ghost">No tasks yet</p>
           )}
           {project.tasks.map(task => (
             <TaskItem key={task.id} task={task} onChanged={onChanged} />
           ))}
           {addingTask && (
-            <div className="pl-4 pr-2 py-1">
+            <div className="pl-5 py-1">
               <input
                 autoFocus
                 value={newTaskName}
@@ -93,7 +104,7 @@ export default function ProjectCard({ project, onChanged }: { project: ProjectWi
                 onBlur={() => { if (newTaskName.trim()) addTask(); else setAddingTask(false) }}
                 onKeyDown={e => { if (e.key === 'Enter') addTask(); if (e.key === 'Escape') setAddingTask(false) }}
                 placeholder="Task name…"
-                className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm text-white outline-none focus:border-indigo-500"
+                className="w-full bg-transparent border-b border-m-violet text-sm text-m-ink outline-none pb-px placeholder:text-m-dim"
               />
             </div>
           )}

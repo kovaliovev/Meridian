@@ -24,19 +24,21 @@ export default function LifeAreaSection({ area, onChanged }: { area: LifeAreaWit
   }
 
   return (
-    <div className="mb-8">
-      <div className="flex items-center gap-2 mb-3">
-        <span className="text-xl">{area.icon}</span>
-        <h2 className="text-lg font-bold text-white" style={{ color: area.color }}>{area.name}</h2>
-        <div className="flex-1 h-px bg-gray-800" />
+    <div className="mb-10">
+      <div className="flex items-center gap-3 mb-5 pl-3 border-l-2" style={{ borderColor: area.color }}>
+        <span className="text-sm">{area.icon}</span>
+        <h2 className="text-sm font-semibold text-m-ink tracking-wide">{area.name}</h2>
+        <div className="flex-1" />
         <button
           onClick={() => setAddingProject(true)}
-          className="text-xs text-gray-500 hover:text-gray-300 px-2 py-1 rounded hover:bg-gray-800 transition-colors"
-        >+ project</button>
+          className="text-[11px] text-m-dim hover:text-m-violet transition-colors"
+        >
+          + project
+        </button>
       </div>
 
       {area.projects.length === 0 && !addingProject && (
-        <p className="text-sm text-gray-600 pl-2">No projects yet.</p>
+        <p className="text-xs text-m-ghost pl-3 ml-0.5">No projects yet.</p>
       )}
 
       {area.projects.map(project => (
@@ -44,7 +46,7 @@ export default function LifeAreaSection({ area, onChanged }: { area: LifeAreaWit
       ))}
 
       {addingProject && (
-        <div className="mb-3">
+        <div className="mb-3 pl-3">
           <input
             autoFocus
             value={newProjectName}
@@ -52,7 +54,7 @@ export default function LifeAreaSection({ area, onChanged }: { area: LifeAreaWit
             onBlur={() => { if (newProjectName.trim()) addProject(); else setAddingProject(false) }}
             onKeyDown={e => { if (e.key === 'Enter') addProject(); if (e.key === 'Escape') setAddingProject(false) }}
             placeholder="Project name…"
-            className="w-full bg-gray-900 border border-indigo-500 rounded-xl px-4 py-2.5 text-sm font-semibold text-white outline-none"
+            className="w-full bg-transparent border-b border-m-violet text-sm font-medium text-m-ink outline-none pb-px placeholder:text-m-dim"
           />
         </div>
       )}

@@ -12,8 +12,10 @@ type Props = {
 export default function Sidebar({ lifeAreas, selectedAreaId, onSelectArea, onChanged }: Props) {
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto px-2 pt-4">
-        <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Life Areas</p>
+      <div className="flex-1 overflow-y-auto pt-5 pb-2">
+        <p className="px-4 text-[10px] font-mono font-semibold text-m-ghost uppercase tracking-[0.2em] mb-3">
+          Areas
+        </p>
         <LifeAreaList
           lifeAreas={lifeAreas}
           selectedAreaId={selectedAreaId}
@@ -21,7 +23,7 @@ export default function Sidebar({ lifeAreas, selectedAreaId, onSelectArea, onCha
           onChanged={onChanged}
         />
       </div>
-      <div className="border-t border-gray-800">
+      <div className="border-t border-m-line">
         <TodaysHabits lifeAreas={lifeAreas} />
       </div>
     </div>
