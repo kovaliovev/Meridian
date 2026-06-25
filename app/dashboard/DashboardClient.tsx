@@ -44,7 +44,7 @@ export default function DashboardClient({ children }: { children: React.ReactNod
   return (
     <div className="flex flex-col h-screen bg-gray-950 text-gray-100">
       <header className="flex items-center justify-between px-6 py-3 border-b border-gray-800 bg-gray-900 shrink-0">
-        <span className="font-bold text-lg tracking-tight text-white">LifeTodo</span>
+        <span className="font-bold text-lg tracking-tight text-white">Meridian</span>
         <Suspense fallback={<div className="w-64" />}>
           <ModeToolbar />
         </Suspense>

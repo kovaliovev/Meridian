@@ -29,6 +29,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950">
       <div className="w-full max-w-sm p-8 bg-gray-900 rounded-2xl shadow-xl">
+        <p className="text-sm font-bold tracking-widest text-indigo-400 uppercase mb-1">Meridian</p>
         <h1 className="text-2xl font-bold mb-6 text-white">Sign in</h1>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
