@@ -14,9 +14,9 @@ export default function TodaysHabits({ lifeAreas }: { lifeAreas: LifeArea[] }) {
   const [habits, setHabits] = useState<HabitRow[]>([])
   const [addingToAreaId, setAddingToAreaId] = useState<string | null>(null)
   const [newHabitName, setNewHabitName] = useState('')
-  const today = toDateString(new Date())
 
   const loadHabits = useCallback(async () => {
+    const today = toDateString(new Date())
     const { data: habitsData } = await supabase.from('habits').select('*').order('created_at')
     if (!habitsData) return
 
@@ -51,36 +51,53 @@ export default function TodaysHabits({ lifeAreas }: { lifeAreas: LifeArea[] }) {
         lifeAreaColor: areaMap[h.life_area_id]?.color ?? '#6366f1',
       }))
     )
-  }, [supabase, lifeAreas, today])
+  }, [supabase, lifeAreas])
 
   useEffect(() => { loadHabits() }, [loadHabits])
 
   async function toggleHabit(habit: HabitRow) {
     if (habit.completedToday) return // append-only log — no un-checking
-    await supabase
+    const today = toDateString(new Date())
+    const { error: insertError } = await supabase
       .from('habit_completions')
       .insert({ habit_id: habit.id, completed_date: today })
-    await supabase
+    if (insertError) {
+      console.error('Failed to complete habit:', insertError)
+      return
+    }
+    const { error: updateError } = await supabase
       .from('habits')
       .update({
         last_completed_at: new Date().toISOString(),
         streak_count: habit.streak_count + 1,
       })
       .eq('id', habit.id)
-    loadHabits()
+    if (updateError) {
+      console.error('Failed to update habit streak:', updateError)
+      return
+    }
+    await loadHabits()
   }
 
   async function addHabit(lifeAreaId: string) {
     if (!newHabitName.trim()) return
-    await supabase.from('habits').insert({ life_area_id: lifeAreaId, name: newHabitName.trim() })
+    const { error } = await supabase.from('habits').insert({ life_area_id: lifeAreaId, name: newHabitName.trim() })
+    if (error) {
+      console.error('Failed to add habit:', error)
+      return
+    }
     setNewHabitName('')
     setAddingToAreaId(null)
-    loadHabits()
+    await loadHabits()
   }
 
   async function deleteHabit(id: string) {
-    await supabase.from('habits').delete().eq('id', id)
-    loadHabits()
+    const { error } = await supabase.from('habits').delete().eq('id', id)
+    if (error) {
+      console.error('Failed to delete habit:', error)
+      return
+    }
+    await loadHabits()
   }
 
   if (lifeAreas.length === 0) return null
