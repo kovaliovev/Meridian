@@ -1,3 +1,5 @@
+import RingsView from '@/components/visualizations/RingsView'
+
 export default function RingsPage() {
-  return <div className="text-gray-400">Rings — coming soon</div>
+  return <RingsView />
 }
