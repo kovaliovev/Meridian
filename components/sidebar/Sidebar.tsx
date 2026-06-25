@@ -1,5 +1,6 @@
 import type { LifeArea } from '@/lib/types'
 import LifeAreaList from './LifeAreaList'
+import TodaysHabits from './TodaysHabits'
 
 type Props = {
   lifeAreas: LifeArea[]
@@ -20,8 +21,9 @@ export default function Sidebar({ lifeAreas, selectedAreaId, onSelectArea, onCha
           onChanged={onChanged}
         />
       </div>
-      {/* Habits section added in Task 7 */}
-      <div id="habits-slot" className="border-t border-gray-800" />
+      <div className="border-t border-gray-800">
+        <TodaysHabits lifeAreas={lifeAreas} />
+      </div>
     </div>
   )
 }
