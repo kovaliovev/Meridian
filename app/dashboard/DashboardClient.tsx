@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Sidebar from '@/components/sidebar/Sidebar'
@@ -9,7 +9,7 @@ import { useToast } from '@/lib/hooks/useToast'
 import type { LifeArea } from '@/lib/types'
 
 export default function DashboardClient({ children }: { children: React.ReactNode }) {
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
   const [lifeAreas, setLifeAreas] = useState<LifeArea[]>([])
   const { toast } = useToast()
   const router = useRouter()

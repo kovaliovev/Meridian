@@ -1,6 +1,5 @@
 'use client'
-import { useState } from 'react'
-import { useRouter, useSearchParams, usePathname } from 'next/navigation'
+import { useState, useMemo } from 'react'
 import type { LifeArea } from '@/lib/types'
 import { createClient } from '@/lib/supabase/client'
 
@@ -15,34 +14,24 @@ type Props = {
 }
 
 export default function LifeAreaList({ lifeAreas, selectedAreaId, onSelectArea, onChanged }: Props) {
-  const supabase = createClient()
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const pathname = usePathname()
+  const supabase = useMemo(() => createClient(), [])
   const [addingNew, setAddingNew] = useState(false)
   const [newName, setNewName] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editName, setEditName] = useState('')
 
-  function handleSelectArea(id: string) {
-    const params = new URLSearchParams(searchParams.toString())
-    if (selectedAreaId === id) {
-      params.delete('area')
-    } else {
-      params.set('area', id)
-    }
-    const query = params.toString()
-    router.push(query ? `${pathname}?${query}` : pathname)
-  }
-
   async function addArea() {
     if (!newName.trim()) return
-    await supabase.from('life_areas').insert({
+    const { error } = await supabase.from('life_areas').insert({
       name: newName.trim(),
       color: PRESET_COLORS[lifeAreas.length % PRESET_COLORS.length],
       icon: PRESET_ICONS[lifeAreas.length % PRESET_ICONS.length],
       position: lifeAreas.length,
     })
+    if (error) {
+      console.error('Failed to add area:', error)
+      return
+    }
     setNewName('')
     setAddingNew(false)
     onChanged()
@@ -50,13 +39,21 @@ export default function LifeAreaList({ lifeAreas, selectedAreaId, onSelectArea, 
 
   async function renameArea(id: string) {
     if (!editName.trim()) return
-    await supabase.from('life_areas').update({ name: editName.trim() }).eq('id', id)
+    const { error } = await supabase.from('life_areas').update({ name: editName.trim() }).eq('id', id)
+    if (error) {
+      console.error('Failed to rename area:', error)
+      return
+    }
     setEditingId(null)
     onChanged()
   }
 
   async function deleteArea(id: string) {
-    await supabase.from('life_areas').delete().eq('id', id)
+    const { error } = await supabase.from('life_areas').delete().eq('id', id)
+    if (error) {
+      console.error('Failed to delete area:', error)
+      return
+    }
     if (selectedAreaId === id) onSelectArea(null)
     onChanged()
   }
@@ -68,7 +65,7 @@ export default function LifeAreaList({ lifeAreas, selectedAreaId, onSelectArea, 
           key={area.id}
           className={`group flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors
             ${selectedAreaId === area.id ? 'bg-gray-800' : 'hover:bg-gray-800/50'}`}
-          onClick={() => handleSelectArea(area.id)}
+          onClick={() => onSelectArea(area.id)}
         >
           <span className="text-base">{area.icon}</span>
           {editingId === area.id ? (
