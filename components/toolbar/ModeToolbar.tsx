@@ -16,7 +16,7 @@ export default function ModeToolbar() {
   const areaParam = searchParams.get('area')
 
   return (
-    <nav className="flex items-center gap-1">
+    <nav className="flex items-center gap-0.5 overflow-x-auto">
       {MODES.map(mode => {
         const active = pathname === mode.href
         const href = areaParam ? `${mode.href}?area=${areaParam}` : mode.href

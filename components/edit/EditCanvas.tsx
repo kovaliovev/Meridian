@@ -5,10 +5,12 @@ import { createClient } from '@/lib/supabase/client'
 import type { LifeAreaWithData } from '@/lib/types'
 import LifeAreaSection from './LifeAreaSection'
 import EmptyState from '@/components/ui/EmptyState'
+import AddSheet from '@/components/ui/AddSheet'
 
 export default function EditCanvas() {
   const supabase = createClient()
   const [areas, setAreas] = useState<LifeAreaWithData[]>([])
+  const [sheetOpen, setSheetOpen] = useState(false)
   const searchParams = useSearchParams()
   const selectedAreaId = searchParams.get('area')
 
@@ -41,15 +43,36 @@ export default function EditCanvas() {
 
   const visibleAreas = selectedAreaId ? areas.filter(a => a.id === selectedAreaId) : areas
 
-  if (areas.length === 0) {
-    return <EmptyState message="Add a life area in the sidebar to get started." />
-  }
-
   return (
-    <div>
-      {visibleAreas.map(area => (
-        <LifeAreaSection key={area.id} area={area} onChanged={loadAll} />
-      ))}
-    </div>
+    <>
+      {areas.length === 0 ? (
+        <EmptyState message="Add a life area in the sidebar to get started." />
+      ) : (
+        <div className="pb-24">
+          {visibleAreas.map(area => (
+            <LifeAreaSection key={area.id} area={area} onChanged={loadAll} />
+          ))}
+        </div>
+      )}
+
+      {/* FAB */}
+      {areas.length > 0 && (
+        <button
+          onClick={() => setSheetOpen(true)}
+          aria-label="Add task or project"
+          className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-m-violet text-m-bg flex items-center justify-center text-2xl font-light shadow-lg shadow-black/40 hover:bg-m-violet-bright hover:scale-105 active:scale-95 transition-all z-30 select-none"
+        >
+          +
+        </button>
+      )}
+
+      <AddSheet
+        areas={areas}
+        open={sheetOpen}
+        defaultAreaId={selectedAreaId}
+        onClose={() => setSheetOpen(false)}
+        onSuccess={loadAll}
+      />
+    </>
   )
 }

@@ -31,7 +31,7 @@ export default function LifeAreaSection({ area, onChanged }: { area: LifeAreaWit
         <div className="flex-1" />
         <button
           onClick={() => setAddingProject(true)}
-          className="text-[11px] text-m-dim hover:text-m-violet transition-colors"
+          className="text-[11px] text-m-ghost hover:text-m-violet transition-colors py-1 px-2 -mr-2"
         >
           + project
         </button>

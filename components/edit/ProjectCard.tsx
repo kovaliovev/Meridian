@@ -71,16 +71,16 @@ export default function ProjectCard({ project, onChanged }: { project: ProjectWi
         {totalCount > 0 && (
           <span className="text-[10px] text-m-ghost font-mono">{doneCount}/{totalCount}</span>
         )}
-        <div className="opacity-0 group-hover:opacity-100 flex items-center gap-2 transition-opacity">
+        <div className="flex items-center gap-2">
           <button
             onClick={e => { e.stopPropagation(); setAddingTask(true); setExpanded(true) }}
-            className="text-[11px] text-m-dim hover:text-m-ink transition-colors"
+            className="text-[11px] text-m-ghost hover:text-m-ink transition-colors py-1 px-1.5 touch-manipulation"
           >
             + task
           </button>
           <button
             onClick={e => { e.stopPropagation(); deleteProject() }}
-            className="text-[11px] text-m-dim hover:text-m-red transition-colors"
+            className="text-[11px] text-m-ghost hover:text-m-red transition-colors py-1 px-1 touch-manipulation"
           >
             ×
           </button>
