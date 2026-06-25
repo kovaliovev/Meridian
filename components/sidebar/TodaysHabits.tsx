@@ -6,7 +6,7 @@ import type { LifeArea, Habit } from '@/lib/types'
 type HabitRow = Habit & { completedToday: boolean; lifeAreaName: string; lifeAreaColor: string }
 
 function toDateString(date: Date): string {
-  return date.toISOString().split('T')[0]
+  return date.toLocaleDateString('en-CA')
 }
 
 export default function TodaysHabits({ lifeAreas }: { lifeAreas: LifeArea[] }) {
@@ -35,10 +35,13 @@ export default function TodaysHabits({ lifeAreas }: { lifeAreas: LifeArea[] }) {
       h.streak_count > 0
     )
     if (toReset.length > 0) {
+      const yesterdayEnd = new Date(Date.now() - 86400000)
+      yesterdayEnd.setHours(23, 59, 59, 999)
       await supabase
         .from('habits')
         .update({ streak_count: 0 })
         .in('id', toReset.map((h: Habit) => h.id))
+        .lt('last_completed_at', yesterdayEnd.toISOString())
     }
 
     const areaMap = Object.fromEntries(lifeAreas.map(a => [a.id, a]))

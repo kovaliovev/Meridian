@@ -1,5 +1,10 @@
+import { Suspense } from 'react'
 import RingsView from '@/components/visualizations/RingsView'
 
 export default function RingsPage() {
-  return <RingsView />
+  return (
+    <Suspense>
+      <RingsView />
+    </Suspense>
+  )
 }

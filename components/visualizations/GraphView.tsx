@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useRef, useState, useMemo } from 'react'
+import { useSearchParams } from 'next/navigation'
 import * as d3 from 'd3'
 import { createClient } from '@/lib/supabase/client'
 
@@ -15,6 +16,7 @@ export default function GraphView() {
   const svgRef = useRef<SVGSVGElement>(null)
   const supabase = useMemo(() => createClient(), [])
   const [detail, setDetail] = useState<DetailPanel | null>(null)
+  const selectedAreaId = useSearchParams().get('area')
 
   useEffect(() => {
     async function load() {
@@ -30,15 +32,21 @@ export default function GraphView() {
       const areaMap = Object.fromEntries(areas.map(a => [a.id, a]))
       const projectMap = Object.fromEntries((projects ?? []).map(p => [p.id, p]))
 
+      const filteredAreas = selectedAreaId ? areas.filter(a => a.id === selectedAreaId) : areas
+      const filteredAreaIds = new Set(filteredAreas.map(a => a.id))
+      const filteredProjects = (projects ?? []).filter(p => filteredAreaIds.has(p.life_area_id))
+      const filteredProjectIds = new Set(filteredProjects.map(p => p.id))
+      const filteredTasks = (tasks ?? []).filter(t => filteredProjectIds.has(t.project_id))
+
       const nodes: NodeDatum[] = [
-        ...areas.map(a => ({ id: a.id, label: `${a.icon} ${a.name}`, type: 'area' as const, color: a.color })),
-        ...(projects ?? []).map(p => ({ id: p.id, label: p.name, type: 'project' as const, color: areaMap[p.life_area_id]?.color ?? '#6366f1', status: p.status })),
-        ...(tasks ?? []).map(t => ({ id: t.id, label: t.name, type: 'task' as const, color: areaMap[projectMap[t.project_id]?.life_area_id]?.color ?? '#6366f1', status: t.status, due_date: t.due_date })),
+        ...filteredAreas.map(a => ({ id: a.id, label: `${a.icon} ${a.name}`, type: 'area' as const, color: a.color })),
+        ...filteredProjects.map(p => ({ id: p.id, label: p.name, type: 'project' as const, color: areaMap[p.life_area_id]?.color ?? '#6366f1', status: p.status })),
+        ...filteredTasks.map(t => ({ id: t.id, label: t.name, type: 'task' as const, color: areaMap[projectMap[t.project_id]?.life_area_id]?.color ?? '#6366f1', status: t.status, due_date: t.due_date })),
       ]
 
       const links: LinkDatum[] = [
-        ...(projects ?? []).map(p => ({ source: p.life_area_id, target: p.id })),
-        ...(tasks ?? []).map(t => ({ source: t.project_id, target: t.id })),
+        ...filteredProjects.map(p => ({ source: p.life_area_id, target: p.id })),
+        ...filteredTasks.map(t => ({ source: t.project_id, target: t.id })),
       ]
 
       renderGraph(nodes, links)
@@ -101,7 +109,7 @@ export default function GraphView() {
     }
 
     load()
-  }, [supabase])
+  }, [supabase, selectedAreaId])
 
   return (
     <div className="relative w-full" style={{ height: 'calc(100vh - 120px)' }}>

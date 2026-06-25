@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { LifeArea, Project, Task } from '@/lib/types'
 
@@ -56,6 +57,7 @@ function Ring({ stats, size = 120 }: { stats: AreaStats; size?: number }) {
 export default function RingsView() {
   const supabase = useMemo(() => createClient(), [])
   const [stats, setStats] = useState<AreaStats[]>([])
+  const selectedAreaId = useSearchParams().get('area')
 
   useEffect(() => {
     async function load() {
@@ -87,13 +89,15 @@ export default function RingsView() {
     load()
   }, [supabase])
 
+  const visibleStats = selectedAreaId ? stats.filter(s => s.id === selectedAreaId) : stats
+
   if (stats.length === 0) return <div className="text-gray-500 text-sm">No life areas yet.</div>
 
   return (
     <div>
       <h1 className="text-xl font-bold text-white mb-8">Progress Overview</h1>
       <div className="flex flex-wrap gap-10">
-        {stats.map(s => <Ring key={s.id} stats={s} size={140} />)}
+        {visibleStats.map(s => <Ring key={s.id} stats={s} size={140} />)}
       </div>
     </div>
   )

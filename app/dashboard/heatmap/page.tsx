@@ -1,4 +1,10 @@
+import { Suspense } from 'react'
 import HeatmapView from '@/components/visualizations/HeatmapView'
+
 export default function HeatmapPage() {
-  return <HeatmapView />
+  return (
+    <Suspense>
+      <HeatmapView />
+    </Suspense>
+  )
 }

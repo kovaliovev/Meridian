@@ -1,9 +1,10 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { LifeArea, Habit } from '@/lib/types'
 
-function toDateStr(d: Date) { return d.toISOString().split('T')[0] }
+function toDateStr(d: Date) { return d.toLocaleDateString('en-CA') }
 
 function buildGrid() {
   const today = new Date(); today.setHours(0,0,0,0)
@@ -23,7 +24,7 @@ export default function HeatmapView() {
   const [completionMap, setCompletionMap] = useState<Record<string, { count: number; habits: string[] }>>({})
   const [maxCount, setMaxCount] = useState(1)
   const [habits, setHabits] = useState<(Habit & { areaColor: string; areaName: string })[]>([])
-  const [filterAreaId, setFilterAreaId] = useState<string | null>(null)
+  const [filterAreaId, setFilterAreaId] = useState<string | null>(useSearchParams().get('area'))
   const [areas, setAreas] = useState<LifeArea[]>([])
   const [tooltip, setTooltip] = useState<{ date: string; habits: string[]; x: number; y: number } | null>(null)
 
@@ -33,7 +34,11 @@ export default function HeatmapView() {
       if (areasError) { console.error('Failed to load life areas:', areasError); return }
       const { data: habitsData, error: habitsError } = await supabase.from('habits').select('*')
       if (habitsError) { console.error('Failed to load habits:', habitsError); return }
-      const { data: completions, error: completionsError } = await supabase.from('habit_completions').select('habit_id, completed_date')
+      const startDate = toDateStr(new Date(Date.now() - 365 * 86400000))
+      const { data: completions, error: completionsError } = await supabase
+        .from('habit_completions')
+        .select('habit_id, completed_date')
+        .gte('completed_date', startDate)
       if (completionsError) { console.error('Failed to load completions:', completionsError); return }
       if (!areasData || !habitsData || !completions) return
 

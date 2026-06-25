@@ -20,7 +20,7 @@ export default function EditCanvas() {
     const { data: tasks } = await supabase.from('tasks').select('*').order('position')
     const { data: subtasks } = await supabase.from('subtasks').select('*').order('position')
     const { data: habits } = await supabase.from('habits').select('*')
-    const today = new Date().toISOString().split('T')[0]
+    const today = new Date().toLocaleDateString('en-CA')
     const { data: completions } = await supabase.from('habit_completions').select('habit_id').eq('completed_date', today)
     const completedIds = new Set((completions ?? []).map(c => c.habit_id))
 

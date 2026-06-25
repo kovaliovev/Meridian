@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback, useEffect, useMemo } from 'react'
+import { useState, useCallback, useEffect, useMemo, Suspense } from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Sidebar from '@/components/sidebar/Sidebar'
@@ -45,7 +45,9 @@ export default function DashboardClient({ children }: { children: React.ReactNod
     <div className="flex flex-col h-screen bg-gray-950 text-gray-100">
       <header className="flex items-center justify-between px-6 py-3 border-b border-gray-800 bg-gray-900 shrink-0">
         <span className="font-bold text-lg tracking-tight text-white">LifeTodo</span>
-        <ModeToolbar />
+        <Suspense fallback={<div className="w-64" />}>
+          <ModeToolbar />
+        </Suspense>
         <div className="w-32" />
       </header>
       <div className="flex flex-1 overflow-hidden">
