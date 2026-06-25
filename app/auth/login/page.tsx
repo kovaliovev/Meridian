@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 
 export default function LoginPage() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -16,6 +16,7 @@ export default function LoginPage() {
     setLoading(true)
     setError(null)
     const supabase = createClient()
+    const email = `${username.trim().toLowerCase()}@meridian.app`
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) {
       setError(error.message)
@@ -33,11 +34,13 @@ export default function LoginPage() {
         <h1 className="text-2xl font-bold mb-6 text-white">Sign in</h1>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Email</label>
+            <label className="block text-sm text-gray-400 mb-1">Username</label>
             <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
+              type="text"
+              value={username}
+              autoCapitalize="none"
+              autoCorrect="off"
+              onChange={e => setUsername(e.target.value)}
               required
               className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-indigo-500"
             />

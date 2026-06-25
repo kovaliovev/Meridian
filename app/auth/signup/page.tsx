@@ -6,41 +6,31 @@ import { createClient } from '@/lib/supabase/client'
 
 export default function SignupPage() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const [confirmationSent, setConfirmationSent] = useState(false)
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError(null)
+    const trimmed = username.trim().toLowerCase()
+    if (!/^[a-z0-9_]{2,20}$/.test(trimmed)) {
+      setError('Username must be 2–20 characters: letters, numbers, underscores only')
+      setLoading(false)
+      return
+    }
     const supabase = createClient()
-    const { data, error } = await supabase.auth.signUp({ email, password })
+    const email = `${trimmed}@meridian.app`
+    const { error } = await supabase.auth.signUp({ email, password })
     if (error) {
       setError(error.message)
       setLoading(false)
-    } else if (!data.session) {
-      // Email confirmation required
-      setError(null)
-      setLoading(false)
-      setConfirmationSent(true)
     } else {
       router.push('/dashboard/edit')
       router.refresh()
     }
-  }
-
-  if (confirmationSent) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-950">
-        <div className="w-full max-w-sm p-8 bg-gray-900 rounded-2xl shadow-xl text-center">
-          <h1 className="text-2xl font-bold mb-4 text-white">Check your email</h1>
-          <p className="text-gray-400 text-sm">We sent a confirmation link to <span className="text-white">{email}</span>. Click it to activate your account.</p>
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -50,11 +40,13 @@ export default function SignupPage() {
         <h1 className="text-2xl font-bold mb-6 text-white">Create account</h1>
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Email</label>
+            <label className="block text-sm text-gray-400 mb-1">Username</label>
             <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
+              type="text"
+              value={username}
+              autoCapitalize="none"
+              autoCorrect="off"
+              onChange={e => setUsername(e.target.value)}
               required
               className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-indigo-500"
             />
