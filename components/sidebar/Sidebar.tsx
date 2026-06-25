@@ -4,7 +4,7 @@ import LifeAreaList from './LifeAreaList'
 type Props = {
   lifeAreas: LifeArea[]
   selectedAreaId: string | null
-  onSelectArea: (id: string | null) => void
+  onSelectArea: (id: string) => void
   onChanged: () => void
 }
 

@@ -9,7 +9,7 @@ const PRESET_ICONS = ['💼', '❤️', '📚', '🎮', '🏃', '🎵', '✈️'
 type Props = {
   lifeAreas: LifeArea[]
   selectedAreaId: string | null
-  onSelectArea: (id: string | null) => void
+  onSelectArea: (id: string) => void
   onChanged: () => void
 }
 
@@ -54,7 +54,6 @@ export default function LifeAreaList({ lifeAreas, selectedAreaId, onSelectArea, 
       console.error('Failed to delete area:', error)
       return
     }
-    if (selectedAreaId === id) onSelectArea(null)
     onChanged()
   }
 

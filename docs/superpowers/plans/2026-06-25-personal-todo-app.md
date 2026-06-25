@@ -17,6 +17,8 @@
 - No automated test suite — manual verification steps instead
 - No external state library — React state + server actions only
 - `@supabase/ssr` (not deprecated `auth-helpers-nextjs`)
+- Sidebar life area filter uses URL search param `?area=<id>` — sidebar writes it via `useRouter().push`, pages read it via `useSearchParams()`. This is idiomatic Next.js App Router (deep-linkable, SSR-compatible, browser nav works). Do NOT use React Context for this.
+- Do NOT create `lib/hooks/useSelectedArea.ts` — it was superseded by the URL search param approach
 - Environment variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 
 ---

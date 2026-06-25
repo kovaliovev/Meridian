@@ -30,16 +30,16 @@ export default function DashboardClient({ children }: { children: React.ReactNod
     loadLifeAreas()
   }, [loadLifeAreas])
 
-  function handleSelectArea(id: string | null) {
+  const handleSelectArea = useCallback((id: string) => {
     const params = new URLSearchParams(searchParams.toString())
-    if (id) {
-      params.set('area', id)
-    } else {
+    if (searchParams.get('area') === id) {
       params.delete('area')
+    } else {
+      params.set('area', id)
     }
     const query = params.toString()
     router.push(query ? `${pathname}?${query}` : pathname)
-  }
+  }, [router, searchParams, pathname])
 
   return (
     <div className="flex flex-col h-screen bg-gray-950 text-gray-100">
