@@ -18,10 +18,14 @@ export default function GraphView() {
 
   useEffect(() => {
     async function load() {
-      const { data: areas } = await supabase.from('life_areas').select('*')
-      const { data: projects } = await supabase.from('projects').select('*')
-      const { data: tasks } = await supabase.from('tasks').select('*')
-      if (!areas) return
+      const { data: areas, error: areasError } = await supabase.from('life_areas').select('*')
+      if (areasError) { console.error('Failed to load life areas:', areasError); return }
+
+      const { data: projects, error: projectsError } = await supabase.from('projects').select('*')
+      if (projectsError) { console.error('Failed to load projects:', projectsError); return }
+
+      const { data: tasks, error: tasksError } = await supabase.from('tasks').select('id, project_id, name, status, due_date')
+      if (tasksError) { console.error('Failed to load tasks:', tasksError); return }
 
       const areaMap = Object.fromEntries(areas.map(a => [a.id, a]))
       const projectMap = Object.fromEntries((projects ?? []).map(p => [p.id, p]))
