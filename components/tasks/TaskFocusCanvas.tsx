@@ -95,7 +95,7 @@ export default function TaskFocusCanvas() {
   const visible = filterAreaId ? tasks.filter(t => t.area?.id === filterAreaId) : tasks
 
   function isFocus(t: EnrichedTask) {
-    return t.status === 'in_progress' || t.priority === 'high' || t.due_date === today
+    return t.status === 'in_progress' || t.priority === 'high' || (t.due_date !== null && t.due_date <= today)
   }
 
   const focusTasks = sortFocus(visible.filter(isFocus))

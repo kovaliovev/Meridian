@@ -74,7 +74,7 @@ export default function EditTaskSheet({ task, onClose, onSuccess }: { task: Task
           {(['low', 'medium', 'high'] as const).map(p => (
             <button
               key={p}
-              onClick={() => setPriority(priority === p ? null : p)}
+              onClick={() => setPriority(priority === p ? (task?.priority as 'low'|'medium'|'high' ?? 'medium') : p)}
               className={`px-3 py-1 rounded-full text-xs font-mono border transition-colors ${
                 priority === p
                   ? p === 'high'

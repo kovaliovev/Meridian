@@ -74,6 +74,15 @@ export default function WindRose({ scores }: { scores: AreaScore[] }) {
         .attr('transform', `translate(${cx},${cy})`)
         .style('cursor', 'pointer')
         .on('click', () => router.push(`/dashboard/tasks?area=${s.area.id}`))
+        .attr('role', 'button')
+        .attr('tabindex', '0')
+        .attr('aria-label', s.area.name)
+        .on('keydown', function(event: KeyboardEvent) {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault()
+            router.push(`/dashboard/tasks?area=${s.area.id}`)
+          }
+        })
 
       if (recentOpacity > 0.05) {
         g.append('path')
@@ -118,5 +127,5 @@ export default function WindRose({ scores }: { scores: AreaScore[] }) {
 
   }, [scores, router])
 
-  return <svg ref={ref} className="w-full h-full" />
+  return <svg ref={ref} className="w-full h-full" aria-label="Wind rose visualization" />
 }

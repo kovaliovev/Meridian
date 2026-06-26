@@ -34,11 +34,19 @@ export default function HabitsRow({ areas, filterAreaId }: { areas: LifeArea[]; 
   async function toggle(h: HabitRow) {
     if (h.completedToday) return
     const today = toDateString(new Date())
-    await supabase.from('habit_completions').insert({ habit_id: h.id, completed_date: today })
-    await supabase.from('habits').update({
-      last_completed_at: new Date().toISOString(),
-      streak_count: h.streak_count + 1,
-    }).eq('id', h.id)
+    const { error: insertError } = await supabase.from('habit_completions').insert({ habit_id: h.id, completed_date: today })
+    if (insertError) return  // duplicate insert (race/multi-device) — bail silently
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    const yesterdayStr = yesterday.toLocaleDateString('en-CA')
+    const streakBroken = !h.last_completed_at || h.last_completed_at < yesterdayStr
+    await supabase
+      .from('habits')
+      .update({
+        streak_count: streakBroken ? 1 : h.streak_count + 1,
+        last_completed_at: today,
+      })
+      .eq('id', h.id)
     await load()
   }
 

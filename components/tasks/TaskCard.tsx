@@ -20,7 +20,8 @@ export default function TaskCard({ task, project, area, onCompleted, onEdit }: P
   async function handleComplete() {
     if (leaving) return
     setLeaving(true)
-    await supabase.from('tasks').update({ status: 'done' }).eq('id', task.id)
+    const { error } = await supabase.from('tasks').update({ status: 'done' }).eq('id', task.id)
+    if (error) { setLeaving(false); return }
     setTimeout(() => onCompleted(task.id), 280)
   }
 

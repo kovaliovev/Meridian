@@ -92,7 +92,7 @@ export default function WindRoseCanvas() {
   const hasAreas = scores.length > 0
 
   return (
-    <div className="flex flex-col" style={{ height: 'calc(100vh - 44px)' }}>
+    <div className="flex flex-col pb-16 sm:pb-0" style={{ height: 'calc(100vh - 44px)' }}>
       {/* Stats header */}
       <div className="px-4 sm:px-6 pt-5 pb-3 shrink-0">
         <p className="font-mono text-[10px] text-m-ghost uppercase tracking-[0.2em] mb-1">{dateStr}</p>
