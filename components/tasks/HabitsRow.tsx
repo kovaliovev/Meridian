@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Habit, LifeArea } from '@/lib/types'
 
@@ -8,7 +8,7 @@ type HabitRow = Habit & { color: string; completedToday: boolean }
 function toDateString(d: Date) { return d.toLocaleDateString('en-CA') }
 
 export default function HabitsRow({ areas, filterAreaId }: { areas: LifeArea[]; filterAreaId: string | null }) {
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
   const [habits, setHabits] = useState<HabitRow[]>([])
 
   const load = useCallback(async () => {
@@ -27,7 +27,7 @@ export default function HabitsRow({ areas, filterAreaId }: { areas: LifeArea[]; 
           completedToday: doneIds.has(h.id),
         }))
     )
-  }, [supabase, areas, filterAreaId])
+  }, [areas, filterAreaId])
 
   useEffect(() => { load() }, [load])
 

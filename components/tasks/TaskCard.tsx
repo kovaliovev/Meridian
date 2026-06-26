@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Task, Project, LifeArea } from '@/lib/types'
 
@@ -12,7 +12,7 @@ type Props = {
 }
 
 export default function TaskCard({ task, project, area, onCompleted, onEdit }: Props) {
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
   const [leaving, setLeaving] = useState(false)
   const today = new Date().toLocaleDateString('en-CA')
   const isOverdue = !!task.due_date && task.due_date < today

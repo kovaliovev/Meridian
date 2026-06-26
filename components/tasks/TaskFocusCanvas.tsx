@@ -84,7 +84,7 @@ export default function TaskFocusCanvas() {
         })),
       })),
     })))
-  }, [supabase])
+  }, [])
 
   useEffect(() => { load() }, [load])
 
