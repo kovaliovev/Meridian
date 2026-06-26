@@ -1,0 +1,19 @@
+<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="g" x="-70%" y="-70%" width="240%" height="240%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Glow halo -->
+  <circle cx="22" cy="22" r="14" stroke="#7c3aed" stroke-width="7" opacity="0.45" filter="url(#g)"/>
+  <!-- Main ring -->
+  <circle cx="22" cy="22" r="14" stroke="#c4b5fd" stroke-width="1.5"/>
+  <!-- Zenith node -->
+  <circle cx="22" cy="8" r="2.5" fill="#c4b5fd" filter="url(#g)" opacity="0.6"/>
+  <circle cx="22" cy="8" r="2" fill="#e4e0f5"/>
+</svg>

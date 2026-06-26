@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import Sidebar from '@/components/sidebar/Sidebar'
 import ModeToolbar from '@/components/toolbar/ModeToolbar'
 import ToastNotification from '@/components/ui/Toast'
+import Logo from '@/components/ui/Logo'
 import { useToast } from '@/lib/hooks/useToast'
 import type { LifeArea } from '@/lib/types'
 
@@ -61,9 +62,7 @@ export default function DashboardClient({ children }: { children: React.ReactNod
           <span className={`block h-px w-5 bg-m-dim transition-all duration-200 ${sidebarOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
         </button>
 
-        <span className="font-mono text-sm font-bold tracking-[0.2em] text-m-violet-bright uppercase select-none">
-          Meridian
-        </span>
+        <Logo className="h-7 w-auto select-none" />
 
         <Suspense fallback={<div className="w-48 h-6" />}>
           <ModeToolbar />
