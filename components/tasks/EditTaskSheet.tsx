@@ -118,7 +118,8 @@ export default function EditTaskSheet({ task, onClose, onSuccess }: { task: Task
           ) : (
             <button
               onClick={() => setConfirmDelete(true)}
-              className="px-4 border border-m-red text-m-red rounded-lg py-2 font-mono text-sm"
+              disabled={saving}
+              className="px-4 border border-m-red text-m-red rounded-lg py-2 font-mono text-sm disabled:opacity-40 transition-opacity"
             >
               Delete
             </button>
