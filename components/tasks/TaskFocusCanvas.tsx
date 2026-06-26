@@ -171,7 +171,7 @@ export default function TaskFocusCanvas() {
       <button
         onClick={() => setFabOpen(true)}
         aria-label="Add task or project"
-        className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 w-12 h-12 rounded-full bg-m-violet text-m-bg flex items-center justify-center text-2xl font-light shadow-lg shadow-black/40 hover:bg-m-violet-bright hover:scale-105 active:scale-95 transition-all z-30 select-none"
+        className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 w-12 h-12 rounded-full bg-m-violet text-m-bg flex items-center justify-center text-2xl font-light shadow-lg hover:bg-m-violet-bright hover:scale-105 active:scale-95 transition-all z-30 select-none"
       >
         +
       </button>
