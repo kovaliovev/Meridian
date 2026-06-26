@@ -10,14 +10,15 @@ export default function EditTaskSheet({ task, onClose, onSuccess }: { task: Task
   const [dueDate, setDueDate] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (task) {
-      setName(task.name)
-      setPriority(task.priority as 'low' | 'medium' | 'high' | null)
-      setDueDate(task.due_date ?? '')
-      setConfirmDelete(false)
-    }
+    setName(task?.name ?? '')
+    setPriority((task?.priority as 'low' | 'medium' | 'high' | null) ?? null)
+    setDueDate(task?.due_date ?? '')
+    setConfirmDelete(false)
+    setError(null)
   }, [task])
 
   const open = task !== null
@@ -25,18 +26,23 @@ export default function EditTaskSheet({ task, onClose, onSuccess }: { task: Task
   async function handleSave() {
     if (!task) return
     setSaving(true)
-    await supabase
+    setError(null)
+    const { error } = await supabase
       .from('tasks')
-      .update({ name, priority: priority ?? undefined, due_date: dueDate || null })
+      .update({ name, priority, due_date: dueDate || null })
       .eq('id', task.id)
     setSaving(false)
+    if (error) { setError(error.message); return }
     onSuccess()
     onClose()
   }
 
   async function handleDelete() {
     if (!task) return
-    await supabase.from('tasks').delete().eq('id', task.id)
+    setDeleting(true)
+    const { error } = await supabase.from('tasks').delete().eq('id', task.id)
+    setDeleting(false)
+    if (error) { setError(error.message); return }
     onSuccess()
     onClose()
   }
@@ -104,9 +110,10 @@ export default function EditTaskSheet({ task, onClose, onSuccess }: { task: Task
           {confirmDelete ? (
             <button
               onClick={handleDelete}
-              className="px-4 bg-m-red text-m-bg rounded-lg py-2 font-mono text-sm font-semibold"
+              disabled={deleting}
+              className="px-4 bg-m-red text-m-bg rounded-lg py-2 font-mono text-sm font-semibold disabled:opacity-40 transition-opacity"
             >
-              Confirm delete
+              {deleting ? 'Deleting…' : 'Confirm delete'}
             </button>
           ) : (
             <button
@@ -117,6 +124,7 @@ export default function EditTaskSheet({ task, onClose, onSuccess }: { task: Task
             </button>
           )}
         </div>
+        {error && <p className="text-m-red text-xs mt-2 font-mono">{error}</p>}
       </div>
     </>
   )
