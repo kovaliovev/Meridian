@@ -18,7 +18,8 @@ export default function VizHub() {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const view = (searchParams.get('view') ?? 'heatmap') as ViewId
+  const raw = searchParams.get('view')
+  const view: ViewId = TABS.some(t => t.id === raw) ? (raw as ViewId) : 'heatmap'
 
   function selectView(id: ViewId) {
     const params = new URLSearchParams(searchParams.toString())
@@ -28,7 +29,7 @@ export default function VizHub() {
 
   return (
     <div className="px-4 sm:px-6 py-5">
-      <div className="flex gap-0 mb-6 border-b border-m-line">
+      <div className="flex mb-6 border-b border-m-line">
         {TABS.map(tab => (
           <button
             key={tab.id}
